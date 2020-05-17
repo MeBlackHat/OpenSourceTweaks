@@ -1,1 +1,1 @@
-###GrindrImage allows to save images from Grindr app.
+GrindrImage allows to save images from Grindr app.
