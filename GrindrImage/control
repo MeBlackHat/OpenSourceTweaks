@@ -1,0 +1,9 @@
+Package: com.mrblackhat.grinderimage
+Name: grinderImage
+Depends: mobilesubstrate
+Version: 0.0.7
+Architecture: iphoneos-arm
+Description: An awesome tweak to save profile images from Grindr.
+Maintainer: MrBlackHat
+Author: MrBlackHat
+Section: Tweaks
