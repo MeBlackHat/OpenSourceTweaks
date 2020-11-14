@@ -1,0 +1,9 @@
+Package: com.meblackhat.wasilentbadges
+Name: WA Silent Badges
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak to show badges for silent messages on WhatsApp!
+Maintainer: MeBlackHat
+Author: MeBlackHat
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
