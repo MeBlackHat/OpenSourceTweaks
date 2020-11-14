@@ -1,16 +1,15 @@
 #import <SpringBoard/SBIcon.h>
 
-@interface WAMessage : NSObject
-@property (nonatomic,retain) NSString* fromJID; 
+@interface WAChatSession : NSObject
+@property(nonatomic) short sessionType;
 @end
 
-@interface WAMessageNotificationCenter
-- (_Bool)isChatWithJIDMuted:(id)arg1;
-- (id)initWithXMPPConnection:(id)arg1 userDefaults:(id)arg2 chatStorage:(id)arg3 pushPayloadDecrypter:(id)arg4;
+@interface WAMessage : NSObject
+@property(readonly, nonatomic) WAChatSession *chatSession;
+@property (nonatomic,retain) NSString* fromJID;
 @end
 
 static NSString *plistPath = @"/var/mobile/Library/Preferences/com.meblackhat.wasilentbadges.plist";
-static WAMessageNotificationCenter *checkMuted;
 static SBIcon *icon;
 
 static void writeBadges(NSString *value){
@@ -32,21 +31,17 @@ static long long getBadges(){
 }
 %end
 
-%hook WAMessageNotificationCenter
-- (id)initWithXMPPConnection:(id)arg1 userDefaults:(id)arg2 chatStorage:(id)arg3 pushPayloadDecrypter:(id)arg4{
-	return checkMuted = %orig;
-}
-%end
-
 %hook WAChatSessionTransaction
 - (void)trackReceivedMessage:(id)arg1{
 	%orig;
 	dispatch_async(dispatch_get_main_queue(), ^{
 		WAMessage *msg = arg1;
-		if([checkMuted isChatWithJIDMuted:msg.fromJID]){
+		if(msg.chatSession.sessionType != 3){
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 			long long crntBadges = getBadges() + [icon badgeValue] + 1;
 			writeBadges([NSString stringWithFormat:@"%lld", crntBadges]);
 			[[UIApplication sharedApplication] setApplicationIconBadgeNumber:crntBadges];
+			});
 		}
 	});
 }
